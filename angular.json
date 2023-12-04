@@ -15,65 +15,27 @@
 			"prefix": "app",
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-angular:application",
-					"options": {
-						"outputPath": "dist/microf",
-						"index": "src/index.html",
-						"browser": "src/main.ts",
-						"polyfills": [
-							"zone.js"
-						],
-						"tsConfig": "tsconfig.app.json",
-						"inlineStyleLanguage": "scss",
-						"assets": [
-							"src/favicon.ico",
-							"src/assets"
-						],
-						"styles": [
-							"src/styles.scss"
-						],
-						"scripts": [],
-						"server": "src/main.server.ts",
-						"prerender": true,
-						"ssr": {
-							"entry": "server.ts"
-						}
-					},
+					"builder": "@angular-architects/native-federation:build",
+					"options": {},
 					"configurations": {
 						"production": {
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "500kb",
-									"maximumError": "1mb"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "2kb",
-									"maximumError": "4kb"
-								}
-							],
-							"outputHashing": "all"
+							"target": "microf:esbuild:production"
 						},
 						"development": {
-							"optimization": false,
-							"extractLicenses": false,
-							"sourceMap": true
+							"target": "microf:esbuild:development",
+							"dev": true
 						}
 					},
 					"defaultConfiguration": "production"
 				},
 				"serve": {
-					"builder": "@angular-devkit/build-angular:dev-server",
-					"configurations": {
-						"production": {
-							"buildTarget": "microf:build:production"
-						},
-						"development": {
-							"buildTarget": "microf:build:development"
-						}
-					},
-					"defaultConfiguration": "development"
+					"builder": "@angular-architects/native-federation:build",
+					"options": {
+						"target": "microf:esbuild:development",
+						"rebuildDelay": 0,
+						"dev": true,
+						"port": 4200
+					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
@@ -99,6 +61,68 @@
 						],
 						"scripts": []
 					}
+				},
+				"esbuild": {
+					"builder": "@angular-devkit/build-angular:browser-esbuild",
+					"options": {
+						"outputPath": "dist/microf",
+						"index": "src/index.html",
+						"polyfills": [
+							"zone.js",
+							"es-module-shims"
+						],
+						"tsConfig": "tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							"src/favicon.ico",
+							"src/assets"
+						],
+						"styles": [
+							"src/styles.scss"
+						],
+						"scripts": [],
+						"server": "src/main.server.ts",
+						"prerender": true,
+						"ssr": {
+							"entry": "server.ts"
+						},
+						"main": "src/main.ts"
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kb",
+									"maximumError": "1mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "4kb"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve-original": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "microf:build:production"
+						},
+						"development": {
+							"buildTarget": "microf:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
 				}
 			}
 		},
